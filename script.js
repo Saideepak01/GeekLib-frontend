@@ -22,7 +22,7 @@ table.innerHTML = `
     </table>
 `;
 
-let API = "https://geeklib-101.herokuapp.com/"
+let API = "https://geeklib-101.herokuapp.com"
 // let API_dev = http://localhost:2001/
 async function loadData() {
   try {
