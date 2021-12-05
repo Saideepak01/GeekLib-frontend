@@ -32,7 +32,28 @@ thead {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+  /* display: block;
+    overflow-x: auto; */
   text-align: center;
+}
+
+.tbl thead tr th:nth-of-type(1) {
+  width: 1%;
+}
+.tbl thead tr th:nth-of-type(2) {
+  width: 30%;
+}
+.tbl thead tr th:nth-of-type(3) {
+  width: 10%;
+}
+.tbl thead tr th:nth-of-type(4) {
+  width: 10%;
+}
+.tbl thead tr th:nth-of-type(5) {
+  width: 10%;
+}
+.tbl thead tr th:nth-of-type(6) {
+  width: 60%;
 }
 
 .tbl td,
@@ -43,7 +64,12 @@ thead {
 .tbl tbody tr:nth-of-type(even) {
   background: #dce9f8;
 }
-
+.tbl thead tr th {
+  vertical-align: top;
+}
+.tbl tbody tr td {
+  padding: 0.7rem;
+}
 .loadAnimation {
   z-index: 1;
   position: relative;
@@ -103,7 +129,7 @@ thead {
   opacity: 0;
   transition: visibility 0s opacity 0, 5s;
 }
-.del_modal{
+.del_modal {
   height: 100vh;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
@@ -117,7 +143,7 @@ thead {
   opacity: 0;
   transition: visibility 0s opacity 0, 5s;
 }
-.del_modalActive{
+.del_modalActive {
   visibility: visible;
   opacity: 1;
 }
@@ -193,32 +219,32 @@ input::placeholder {
 .delete {
   margin: 0.2rem 1rem 0 1rem;
 }
-.edit{
-  color: #2975CC;
+.edit {
+  color: #2975cc;
   background-color: white;
-  border: 2px solid #2975CC;
+  border: 2px solid #2975cc;
 }
-.edit:hover{
-  background-color:#f2f8ff;
+.edit:hover {
+  background-color: #f2f8ff;
 }
 .edit:active {
   transform: scale(0.98);
   background-color: #d9e7f7;
 }
-.delete{
-  background-color: #E47361;
-  border: 2px solid #E47361;
+.delete {
+  background-color: #e47361;
+  border: 2px solid #e47361;
 }
-.delete:hover{
+.delete:hover {
   background-color: #ec5a44;
   border: 2px solid #ec5a44;
 }
-.delete:active{
+.delete:active {
   transform: scale(0.98);
   background-color: #d35b49;
   border: 2px solid #d35b49;
 }
-.addbtn {
+.tablettl {
   padding: 0.5rem 0;
 }
 .grey_cancel {
@@ -250,37 +276,82 @@ input::placeholder {
 .modal1_firstPart {
   margin: 0 1.2rem 0 0;
 }
-.delete_modal{
+.delete_modal {
   margin-left: auto;
 }
-.deleteContents_align{
+.deleteContents_align {
   text-align: center;
   line-height: 30px;
 }
-.del_align{
+.del_align {
   margin-left: auto;
 }
-.searchBar{
+.searchBar {
   margin: 0 0.5rem 0 auto;
 }
-.hide{
+.hide {
   visibility: hidden;
 }
-.show{
+.show {
   visibility: visible;
 }
-.styling_close{
+.styling_close {
   border: 1px solid #76787a;
   border-radius: 4px;
   transition: all 0.5s;
 }
-.styling_close:hover{
+.styling_close:hover {
   transform: translateY(-0.5px);
   background-color: #c2c2c2;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
   cursor: pointer;
 }
-.styling_close:active{
+.styling_close:active {
   transform: scale(0.98);
   background-color: #76787a;
+}
+.group {
+  display: flex;
+  align-content: center;
+}
+
+@media (max-width: 500px) {
+  .tbl thead {
+    display: none;
+  }
+  .tbl,
+  .table tbody,
+  .tbl tr,
+  .tbl td {
+    display: block;
+    width: 320px;
+  }
+  .tbl tr {
+    margin-bottom: 0.3rem;
+  }
+  .tbl tbody tr td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+  .tbl td:before {
+    content: attr(data-label);
+    position: absolute;
+    font-weight: bolder;
+    left: 0;
+    width: 50%;
+    padding-left: 15px;
+    text-align: left;
+  }
+  .group {
+    display: flex;
+    flex-direction: column;
+  }
+  .group input {
+    width: 200px;
+    margin-bottom: 0.3rem;
+  }
+  .group button {
+    width: 200px;
+  }
 }

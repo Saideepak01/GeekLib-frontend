@@ -11,7 +11,6 @@ table.innerHTML = `
         <thead>
             <tr>
                 <th>S.no</th>
-                <th>#book_id</th>
                 <th>Name</th>
                 <th>Author</th>
                 <th>Genre</th>
@@ -23,9 +22,11 @@ table.innerHTML = `
     </table>
 `;
 
+let API = "https://geeklib-101.herokuapp.com/"
+// let API_dev = http://localhost:2001/
 async function loadData() {
   try {
-    const data = await fetch(`https://geeklib-101.herokuapp.com/`);
+    const data = await fetch(`${API}`);
     const res = await data.json();
     if (res.length === 0) {
       const tableEmpty = document.querySelector("tbody");
@@ -33,8 +34,10 @@ async function loadData() {
     <div class="tableEmpty">
       <p>&ldquo; No books avaliable &rdquo;</p><br />
       <button class="btn_styling" onClick=addNewBook()>Add Book</button>
-    </div> 
+    </div>
   `;
+      const searchHide = document.querySelector(".group")
+      searchHide.classList.add("hide")
     } else {
       books(res);
     }
@@ -43,14 +46,20 @@ async function loadData() {
   }
 }
 loadData();
-const addBtn = document.querySelector(".addbtn");
-addBtn.innerHTML = `
+
+const tablettl = document.querySelector(".tablettl");
+tablettl.innerHTML = `
 <div class="add">
-  <p><strong>Library Item List</strong></p>
-  <input class="searchBar show" type="text" id="txtInp" onkeyup="search()" placeholder="Search using book name">
-  <button onClick="addNewBook()" class="btn_styling show">Add Book</button>
+  <di>
+    <p><strong>Library Item List</strong></p>
+  </di>
+  <div class="group"">
+    <input class="searchBar" type="text" id="txtInp" onkeyup="search()" placeholder="Search using book name">
+    <button onClick="addNewBook()" class="btn_styling">Add Book</button>
+  </div>
 </div>
 `;
+
 let flag;
 function addNewBook() {
   let modal = document.querySelector(".modal");
@@ -60,18 +69,21 @@ function addNewBook() {
   flag = false;
 }
 function books(list) {
-  // console.log(list);
   const tableBody = document.querySelector("tbody");
   list.map((books, index) => {
     let row = document.createElement("tr");
     let sNo = document.createElement("td");
-    let id = document.createElement("td");
     let name = document.createElement("td");
     let author = document.createElement("td");
     let genre = document.createElement("td");
     let edition = document.createElement("td");
 
-    id.innerHTML = books.id;
+    sNo.setAttribute("data-label", "S.No")
+    name.setAttribute("data-label", "Name")
+    author.setAttribute("data-label", "Author")
+    genre.setAttribute("data-label", "Genre")
+    edition.setAttribute("data-label", "Edition")
+
     name.innerHTML = books.Name;
     author.innerHTML = books.Author;
     genre.innerHTML = books.Genre;
@@ -79,7 +91,6 @@ function books(list) {
     sNo.innerText = `${index + 1}`;
 
     row.appendChild(sNo);
-    row.appendChild(id);
     row.appendChild(name);
     row.appendChild(author);
     row.appendChild(genre);
@@ -99,27 +110,16 @@ function books(list) {
     row.appendChild(del);
 
     tableBody.appendChild(row);
-    // id.className = "test";
   });
 }
 
 function editContent() {
   const editId = event.target.parentNode.innerText;
-  const [, id, name, author, genre, edition] = editId.split("\t");
-  window.id = id;
+  const [, name, author, genre, edition] = editId.split("\t");
 
   let modal = document.querySelector(".modal");
   modal.classList.add("modal_active");
 
-  // let bkName = document.querySelector("#name");
-  // let bkEdition = document.querySelector("#edition");
-  // let bkGenre = document.querySelector("#genre");
-  // let bkAuthor = document.querySelector("#author");
-
-  // bkName.value = name;
-  // bkEdition.value = edition;
-  // bkGenre.value = genre;
-  // bkAuthor.value = author;
   let wordTtlED = "Edit book details";
   modals(wordTtlED, name, author, genre, edition);
   flag = true;
@@ -155,7 +155,7 @@ function modals(wordChange, name, author, genre, edition) {
                 }><br />
                 <div class="modal_btns">
                   <button type="button" class="grey_cancel right_btn" onClick="close_Btn()">Cancel</button>
-                  <button type="button" class="btn_styling right_btn" onClick="book()">Save</button>
+                  <button type="button" class="btn_styling right_btn" onClick="book('${name}')">Save</button>
                 </div>
             </div>
           </form>
@@ -163,7 +163,7 @@ function modals(wordChange, name, author, genre, edition) {
 `;
 }
 
-async function book() {
+async function book(name) {
   let newName = document.querySelector("#name").value;
   let newEdition = document.querySelector("#edition").value;
   let newGenre = document.querySelector("#genre").value;
@@ -185,16 +185,13 @@ async function book() {
     };
     if (flag) {
       try {
-        const updatedData = await fetch(
-          `https://geeklib-101.herokuapp.com/${id}`,
-          {
-            method: "PUT",
-            body: JSON.stringify(updatedBook),
-            headers: {
-              "Content-type": "application/json",
-            },
-          }
-        );
+        const updatedData = await fetch(`${API}/${name}`, {
+          method: "PUT",
+          body: JSON.stringify(updatedBook),
+          headers: {
+            "Content-type": "application/json",
+          },
+        });
         const table = document.querySelector("tbody");
         table.innerText = "";
         loadData();
@@ -205,11 +202,7 @@ async function book() {
       }
     } else {
       try {
-        // let spinner = document.querySelector(".loading");
-        // spinner.innerHTML = `
-        //   <img class="loadAnimation" src="Components/SVG/icon-park-outline_loading.svg" alt="loading"></img>
-        // `;
-        const newData = await fetch(`https://geeklib-101.herokuapp.com/`, {
+        const newData = await fetch(`${API}`, {
           method: "POST",
           body: JSON.stringify(updatedBook),
           headers: {
@@ -235,9 +228,8 @@ function refresh() {
 }
 async function deleteContent() {
   const editId = event.target.parentNode.innerText;
-  let [, id, name] = editId.split("\t");
-  // console.log("tested", name);
-  // console.log("tested", id);
+  let [, bkname] = editId.split("\t");
+  // console.log("tested", bkname);
 
   const deleteRes = document.querySelector(".del_modal");
   deleteRes.classList.add("del_modalActive");
@@ -248,35 +240,31 @@ async function deleteContent() {
     </div>
     <div class="deleteContents_align">
       <img src="Components/SVG/emojione_warning.svg" alt="warning" />
-      <p><strong>Are you sure you want to delete</strong><br />&ldquo; ${name} &rdquo;</p>
+      <p><strong>Are you sure you want to delete</strong><br />&ldquo; ${bkname} &rdquo;</p>
       <button class="btn_styling grey_cancel" onClick="del_closeBtn()">No</button>
-      <button class="btn_styling" onClick="deleteData(${id})">Yes</button>
+      <button class="btn_styling" onClick="deleteData('${bkname}')">Yes</button>
     </div>
   </div>  
   `;
 }
 
-function del_closeBtn() {
-  let delModal = document.querySelector(".del_modal");
-  delModal.classList.remove("del_modalActive");
-}
-
 async function deleteData(condition) {
   try {
-    const delData = await fetch(
-      `https://geeklib-101.herokuapp.com/${condition}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const delData = await fetch(`${API}/${condition}`, {
+      method: "DELETE",
+    });
     del_closeBtn();
     const table = document.querySelector("tbody");
     table.innerText = "";
     loadData();
-    console.log("success");
   } catch (err) {
     console.log(err);
   }
+}
+
+function del_closeBtn() {
+  let delModal = document.querySelector(".del_modal");
+  delModal.classList.remove("del_modalActive");
 }
 
 function close_Btn() {
