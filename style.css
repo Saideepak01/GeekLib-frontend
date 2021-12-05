@@ -316,32 +316,9 @@ input::placeholder {
 }
 
 @media (max-width: 500px) {
-  .tbl thead {
-    display: none;
-  }
-  .tbl,
-  .table tbody,
-  .tbl tr,
-  .tbl td {
-    display: block;
-    width: 320px;
-  }
-  .tbl tr {
-    margin-bottom: 0.3rem;
-  }
-  .tbl tbody tr td {
-    text-align: right;
-    padding-left: 50%;
-    position: relative;
-  }
-  .tbl td:before {
-    content: attr(data-label);
-    position: absolute;
-    font-weight: bolder;
-    left: 0;
-    width: 50%;
-    padding-left: 15px;
-    text-align: left;
+  .data {
+    overflow-x: scroll;
+    width: 100%;
   }
   .group {
     display: flex;
@@ -353,5 +330,28 @@ input::placeholder {
   }
   .group button {
     width: 200px;
+  }
+  .modal1_width {
+    width: 300px;
+    height: 390px;
+  }
+  .modal1_form {
+    display: flex;
+    flex-direction: column;
+  }
+  .modal1_secondPart {
+    margin-top: 0.5rem;
+  }
+  input::placeholder {
+    font-size: 0.9rem;
+  }
+  .modal_btns button:nth-of-type(1) {
+    margin-right: auto;
+  }
+  .modal1_firstPart {
+    margin: 0;
+  }
+  .del_modalFlex {
+    height: 250px;
   }
 }

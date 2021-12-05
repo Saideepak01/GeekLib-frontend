@@ -22,7 +22,7 @@ table.innerHTML = `
     </table>
 `;
 
-let API = "https://geeklib-101.herokuapp.com"
+let API = "https://geeklib-101.herokuapp.com";
 // let API_dev = http://localhost:2001/
 async function loadData() {
   try {
@@ -36,8 +36,8 @@ async function loadData() {
       <button class="btn_styling" onClick=addNewBook()>Add Book</button>
     </div>
   `;
-      const searchHide = document.querySelector(".group")
-      searchHide.classList.add("hide")
+      const searchHide = document.querySelector(".group");
+      searchHide.classList.add("hide");
     } else {
       books(res);
     }
@@ -78,11 +78,12 @@ function books(list) {
     let genre = document.createElement("td");
     let edition = document.createElement("td");
 
-    sNo.setAttribute("data-label", "S.No")
-    name.setAttribute("data-label", "Name")
-    author.setAttribute("data-label", "Author")
-    genre.setAttribute("data-label", "Genre")
-    edition.setAttribute("data-label", "Edition")
+    sNo.setAttribute("data-label", "S.No");
+    sNo.setAttribute("class", "test456");
+    name.setAttribute("data-label", "Name");
+    author.setAttribute("data-label", "Author");
+    genre.setAttribute("data-label", "Genre");
+    edition.setAttribute("data-label", "Edition");
 
     name.innerHTML = books.Name;
     author.innerHTML = books.Author;
@@ -115,13 +116,13 @@ function books(list) {
 
 function editContent() {
   const editId = event.target.parentNode.innerText;
-  const [, name, author, genre, edition] = editId.split("\t");
+  const [, names, author, genre, edition] = editId.split("\t");
 
   let modal = document.querySelector(".modal");
   modal.classList.add("modal_active");
 
   let wordTtlED = "Edit book details";
-  modals(wordTtlED, name, author, genre, edition);
+  modals(wordTtlED, names, author, genre, edition);
   flag = true;
 }
 
@@ -229,12 +230,11 @@ function refresh() {
 async function deleteContent() {
   const editId = event.target.parentNode.innerText;
   let [, bkname] = editId.split("\t");
-  // console.log("tested", bkname);
 
   const deleteRes = document.querySelector(".del_modal");
   deleteRes.classList.add("del_modalActive");
   deleteRes.innerHTML = `
-  <div class="modal1_width">
+  <div class="modal1_width del_modalFlex">
     <div class="modal1">
       <button onClick="del_closeBtn()" class="close_btn del_align"><img class="styling_close" src="Components/SVG/Close_icon.svg" alt="close_button" /></button>
     </div>
