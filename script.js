@@ -32,7 +32,8 @@ async function loadData() {
   try {
     const data = await fetch(`${API}`);
     const res = await data.json();
-    if (res.length === 0) { //checks the length of fetched data if 0 then displayes no books avaliable else send the data to the books function
+    if (res.length === 0) {
+      //checks the length of fetched data if 0 then displayes no books avaliable else send the data to the books function
       const tableEmpty = document.querySelector("tbody");
       tableEmpty.innerHTML = `
     <div class="tableEmpty">
@@ -63,7 +64,7 @@ tablettl.innerHTML = `
   </div>
 </div>
 `;
- 
+
 let flag; //flag to check route which opeartion is to be carried out at book() function if false add operation else update
 
 //onClick of add button the addnewbook fn is called and the modal is activated and "add a new book" word is send as parameter to the modal fn and conditionally renders the modal title so that we can know that we are editing or adding
@@ -99,12 +100,12 @@ function booksData(list) {
     row.appendChild(edition);
 
     let edit = document.createElement("button");
-    edit.setAttribute("onClick", `editContent()`);//edit button
+    edit.setAttribute("onClick", `editContent()`); //edit button
     edit.className = "edit btn_styling";
     edit.innerText = "Edit";
 
     let del = document.createElement("button");
-    del.setAttribute("onClick", `deleteContent()`);//delete button
+    del.setAttribute("onClick", `deleteContent()`); //delete button
     del.className = "delete btn_styling";
     del.innerText = "Delete";
 
@@ -115,8 +116,8 @@ function booksData(list) {
   });
 }
 
-//onClick of edit button the editContent() fn is called and the modal is activated and "Edit book details" word is send as parameter to the modal fn and conditionally render the modal title so that we can know that we are editing or adding 
-//and also the name, author, genre, edition details of the specific row is sent as parameter to the modal to edit the data 
+//onClick of edit button the editContent() fn is called and the modal is activated and "Edit book details" word is send as parameter to the modal fn and conditionally render the modal title so that we can know that we are editing or adding
+//and also the name, author, genre, edition details of the specific row is sent as parameter to the modal to edit the data
 function editContent() {
   const editId = event.target.parentNode.innerText;
   const [, names, author, genre, edition] = editId.split("\t");
@@ -206,6 +207,16 @@ async function book(name) {
         loadData();
         refresh();
         close_Btn();
+        display();
+        const notification = document.querySelector(".notification");
+        notification.innerHTML = `
+            <p>Changes saved!</p>
+          `;
+        notification.classList.remove("clr");
+        notification.classList.remove("hide");
+        setTimeout(function () {
+          notification.classList.add("hide");
+        }, 2000);
       } catch (err) {
         console.log(err);
       }
@@ -223,11 +234,29 @@ async function book(name) {
         loadData();
         refresh();
         close_Btn();
+        display();
+        const notification = document.querySelector(".notification");
+        notification.innerHTML = `
+          <p>Book added!</p>
+        `;
+        notification.classList.remove("hide");
+        notification.classList.remove("clr");
+        setTimeout(function () {
+          notification.classList.add("hide");
+        }, 2000);
       } catch (err) {
         console.log(err);
       }
     }
   }
+}
+
+//creating the notification div element when edit, delete and add button is clicked.
+function display() {
+  const notification = document.createElement("div");
+  notification.classList.add("notification");
+  notification.classList.add("hide");
+  document.body.appendChild(notification);
 }
 
 //after the details filled in the modal and submitted successfully the form input values gets reseted
@@ -270,6 +299,17 @@ async function deleteData(condition) {
     const table = document.querySelector("tbody");
     table.innerText = "";
     loadData();
+    display();
+    const notification = document.querySelector(".notification");
+    notification.classList.add("clr");
+    notification.innerHTML = `
+      <p>&ldquo;${condition}&rdquo; deleted!</p>
+    `; 
+    notification.classList.remove("hide");
+    notification.classList.remove("clr");
+    setTimeout(function () {
+      notification.classList.add("hide");
+    }, 2000);
   } catch (err) {
     console.log(err);
   }
