@@ -12,11 +12,12 @@ table.innerHTML = `
     <table class="tbl">
         <thead>
             <tr>
-                <th>S.no</th>
-                <th>Name</th>
+                <th>S.No</th>
+                <th>Book Name</th>
                 <th>Author</th>
                 <th>Genre</th>
                 <th>Edition</th>
+                <th>#ISBN</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -24,14 +25,15 @@ table.innerHTML = `
     </table>
 `;
 
-let API = "https://geeklib-101.herokuapp.com";
-// let API_dev = http://localhost:2001/
+// let API = "https://geeklib-101.herokuapp.com";
+let API = "http://localhost:2001";
 
 //async operation which fetches the data
 async function loadData() {
   try {
     const data = await fetch(`${API}`);
     const res = await data.json();
+    window.noOfBooks = res.length;
     if (res.length === 0) {
       //checks the length of fetched data if 0 then displayes no books avaliable else send the data to the books function
       const tableEmpty = document.querySelector("tbody");
@@ -47,7 +49,11 @@ async function loadData() {
       booksData(res);
     }
   } catch (err) {
-    console.log("failed");
+    const error = document.querySelector(".error");
+    error.innerHTML = `
+      <p>:(</p>
+      <p>Technical error</p>
+    `;
   }
 }
 loadData();
@@ -55,16 +61,17 @@ loadData();
 const tablettl = document.querySelector(".tablettl");
 tablettl.innerHTML = `
 <div class="add">
-  <di>
+  <div>
     <p><strong>Library Item List</strong></p>
-  </di>
-  <div class="group"">
-    <input class="searchBar" type="text" id="txtInp" onkeyup="search()" placeholder="Search using book name">
+  </div>
+  <div class="group">
+    <input class="searchBar" type="text" id="txtInp" onkeyup="search()" placeholder="Search using ISBN">
     <button onClick="addNewBook()" class="btn_styling">Add Book</button>
   </div>
 </div>
-`;
+  `;
 
+// <input class="searchBar" type="text" id="txtInp" onkeyup="search()" placeholder="Search using book name">
 let flag; //flag to check route which opeartion is to be carried out at book() function if false add operation else update
 
 //onClick of add button the addnewbook fn is called and the modal is activated and "add a new book" word is send as parameter to the modal fn and conditionally renders the modal title so that we can know that we are editing or adding
@@ -80,24 +87,27 @@ function addNewBook() {
 function booksData(list) {
   const tableBody = document.querySelector("tbody");
   list.map((books, index) => {
-    let row = document.createElement("tr");
     let sNo = document.createElement("td");
+    let row = document.createElement("tr");
+    let id = document.createElement("td");
     let name = document.createElement("td");
     let author = document.createElement("td");
     let genre = document.createElement("td");
     let edition = document.createElement("td");
 
+    sNo.innerText = `${index + 1}`;
+    id.innerText = books.id;
     name.innerHTML = books.Name;
     author.innerHTML = books.Author;
     genre.innerHTML = books.Genre;
     edition.innerHTML = books.Edition;
-    sNo.innerText = `${index + 1}`;
 
     row.appendChild(sNo);
     row.appendChild(name);
     row.appendChild(author);
     row.appendChild(genre);
     row.appendChild(edition);
+    row.appendChild(id);
 
     let edit = document.createElement("button");
     edit.setAttribute("onClick", `editContent()`); //edit button
@@ -120,19 +130,19 @@ function booksData(list) {
 //and also the name, author, genre, edition details of the specific row is sent as parameter to the modal to edit the data
 function editContent() {
   const editId = event.target.parentNode.innerText;
-  const [, names, author, genre, edition] = editId.split("\t");
+  const [, names, author, genre, edition, id] = editId.split("\t");
 
   let modal = document.querySelector(".modal");
   modal.classList.add("modal_active");
-
   let wordTtlED = "Edit book details";
-  modals(wordTtlED, names, author, genre, edition);
+  modals(wordTtlED, names, author, genre, edition, id);
   flag = true;
 }
 
 //after clicking edit or add button the modals function is activated it conditionally renders and checks if it has to display add or edit
-function modals(wordChange, name, author, genre, edition) {
+function modals(wordChange, name, author, genre, edition, id) {
   const modal = document.querySelector(".modal");
+
   modal.innerHTML = `
       <div class="modal1_width">
         <div class="modal1">
@@ -142,26 +152,26 @@ function modals(wordChange, name, author, genre, edition) {
           <form class="modal1_form" autocomplete="off">
             <div class="modal1_firstPart">
                   <label for="name">Name</label><br />
-                  <input type="text" id="name" placeholder="Enter book name" value=${
+                  <input type="text" id="name" placeholder="Enter book name" value='${
                     name === undefined ? "" : name
-                  }><br /><br />
+                  }'><br /><br />
                   <label for="edition">Edition</label><br />
-                  <input type="text" id="edition" placeholder="Enter edition" value=${
+                  <input type="text" id="edition" placeholder="Enter edition" value='${
                     edition === undefined ? "" : edition
-                  }><br />
+                  }'><br />
             </div>
             <div class="modal1_secondPart">
                 <label for="genre">Genre</label><br />
-                <input type="text" id="genre" placeholder="Enter genre" value=${
+                <input type="text" id="genre" placeholder="Enter genre" value='${
                   genre === undefined ? "" : genre
-                }><br /><br />
+                }'><br /><br />
                 <label for="author">Author</label><br />
-                <input type="text" id="author" placeholder="Enter author name" value=${
+                <input type="text" id="author" placeholder="Enter author name" value='${
                   author === undefined ? "" : author
-                }><br />
+                }'><br />
                 <div class="modal_btns">
                   <button type="button" class="grey_cancel right_btn" onClick="close_Btn()">Cancel</button>
-                  <button type="button" class="btn_styling right_btn" onClick="book('${name}')">Save</button>
+                  <button type="button" class="btn_styling right_btn" onClick="book(${id})">Save</button>
                 </div>
             </div>
           </form>
@@ -170,7 +180,7 @@ function modals(wordChange, name, author, genre, edition) {
 }
 
 //onclicking the save button in the modal it calls the book() function here name is accepeted as parameter if edit operation occurs then this name parameter is used to query the DB in the backend
-async function book(name) {
+async function book(id) {
   let newName = document.querySelector("#name").value;
   let newEdition = document.querySelector("#edition").value;
   let newGenre = document.querySelector("#genre").value;
@@ -183,7 +193,7 @@ async function book(name) {
     newGenre === "" ||
     newAuthor === ""
   ) {
-    alert("Enter the form");
+    alert("Form no filled fully");
   } else {
     const updatedBook = {
       Name: newName,
@@ -191,17 +201,18 @@ async function book(name) {
       Genre: newGenre,
       Edition: newEdition,
     };
-
+    // console.log(updatedBook)
     //the flag variable we previously used if checked here if true update opreation takes place or else add operation takes place
     if (flag) {
       try {
-        const updatedData = await fetch(`${API}/${name}`, {
+        const updatedData = await fetch(`${API}/${id}`, {
           method: "PUT",
           body: JSON.stringify(updatedBook),
           headers: {
             "Content-type": "application/json",
           },
         });
+        console.log(updatedData);
         const table = document.querySelector("tbody");
         table.innerText = "";
         loadData();
@@ -216,9 +227,14 @@ async function book(name) {
         notification.classList.remove("hide");
         setTimeout(function () {
           notification.classList.add("hide");
-        }, 2000);
+        }, 2500);
+        // console.log(id)
       } catch (err) {
-        console.log(err);
+        const error = document.querySelector(".error");
+        error.innerHTML = `
+          <p>:(</p>
+          <p>Technical error</p>
+        `;
       }
     } else {
       try {
@@ -243,9 +259,19 @@ async function book(name) {
         notification.classList.remove("clr");
         setTimeout(function () {
           notification.classList.add("hide");
+        }, 3000);
+        const searchHide = document.querySelector(".group");
+        searchHide.classList.remove("hide");
+        searchHide.classList.add("show");
+        setTimeout(function () {
+          window.location.reload(true);
         }, 2000);
       } catch (err) {
-        console.log(err);
+        const error = document.querySelector(".error");
+        error.innerHTML = `
+          <p>:(</p>
+          <p>Technical error</p>
+        `;
       }
     }
   }
@@ -270,7 +296,9 @@ function refresh() {
 //onclick of delete button, deleteContent() fn is called and a warning modal is displayed wheather to delete the specific row from the DB or not
 async function deleteContent() {
   const editId = event.target.parentNode.innerText;
-  let [, bkname] = editId.split("\t");
+  let [, bkname, , , , id] = editId.split("\t");
+
+  window.delBkname = bkname;
 
   const deleteRes = document.querySelector(".del_modal");
   deleteRes.classList.add("del_modalActive");
@@ -281,18 +309,18 @@ async function deleteContent() {
     </div>
     <div class="deleteContents_align">
       <img src="Components/SVG/emojione_warning.svg" alt="warning" />
-      <p><strong>Are you sure you want to delete</strong><br />&ldquo; ${bkname} &rdquo;</p>
+      <p class="deleteName"><strong>Are you sure you want to delete</strong><br /><strong>&ldquo; ${bkname} &rdquo;</strong></p>
       <button class="btn_styling grey_cancel" onClick="del_closeBtn()">No</button>
-      <button class="btn_styling" onClick="deleteData('${bkname}')">Yes</button>
+      <button class="btn_styling" onClick="deleteData(${id})">Yes</button>
     </div>
   </div>  
   `;
 }
 
 //if yes button is clicked deleteData() fn is initiated and the row is deleted from the DB
-async function deleteData(condition) {
+async function deleteData(id) {
   try {
-    const delData = await fetch(`${API}/${condition}`, {
+    const delData = await fetch(`${API}/${id}`, {
       method: "DELETE",
     });
     del_closeBtn();
@@ -303,15 +331,19 @@ async function deleteData(condition) {
     const notification = document.querySelector(".notification");
     notification.classList.add("clr");
     notification.innerHTML = `
-      <p>&ldquo;${condition}&rdquo; deleted!</p>
-    `; 
+      <p>&ldquo;${delBkname}&rdquo; deleted!</p>
+    `;
     notification.classList.remove("hide");
     notification.classList.remove("clr");
     setTimeout(function () {
       notification.classList.add("hide");
     }, 2000);
   } catch (err) {
-    console.log(err);
+    const error = document.querySelector(".error");
+    error.innerHTML = `
+      <p>:(</p>
+      <p>Technical error</p>
+    `;
   }
 }
 
@@ -327,13 +359,15 @@ function close_Btn() {
   modal.classList.remove("modal_active");
 }
 
-//load screen
 let spinner = document.querySelector(".loading");
-window.addEventListener("load", function () {
-  spinner.style.display = "none";
-});
+window.onload = function () {
+  let spinner = document.querySelector(".loading");
+  spinner.style.transition = "opacity 1s";
+  setTimeout(function () {
+    spinner.style.opacity = 0;
+  }, 0);
+};
 
-//search operation for searching using names
 function search() {
   let input, filter, table, tr, td, i, value;
   input = document.querySelector("#txtInp");
@@ -341,7 +375,7 @@ function search() {
   table = document.querySelector(".tbl");
   tr = table.getElementsByTagName("tr");
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[2];
+    td = tr[i].getElementsByTagName("td")[5];
     if (td) {
       value = td.innerText;
       if (value.toUpperCase().indexOf(filter) > -1) {

@@ -1,12 +1,11 @@
 * {
   box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
+  font-family: "Murecho", sans-serif;
   margin: 0;
 }
 
 body {
   height: 100vh;
-  overflow: hidden;
 }
 
 .logo {
@@ -40,19 +39,19 @@ thead {
   width: 1%;
 }
 .tbl thead tr th:nth-of-type(2) {
-  width: 30%;
+  width: 20%;
 }
 .tbl thead tr th:nth-of-type(3) {
-  width: 10%;
+  width: 13%;
 }
 .tbl thead tr th:nth-of-type(4) {
-  width: 10%;
+  width: 13%;
 }
 .tbl thead tr th:nth-of-type(5) {
-  width: 10%;
+  width: 13%;
 }
 .tbl thead tr th:nth-of-type(6) {
-  width: 60%;
+  width: 13%;
 }
 
 .tbl td,
@@ -69,6 +68,7 @@ thead {
 .tbl tbody tr td {
   padding: 0.7rem;
 }
+
 .loadAnimation {
   z-index: 1;
   position: relative;
@@ -105,7 +105,7 @@ thead {
   border: 1px solid #76787a;
   border-radius: 6px;
   width: 570px;
-  height: 260px;
+  height: 275px;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
     rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
@@ -285,25 +285,36 @@ input::placeholder {
   text-align: right;
   margin: 1rem 0 0 0;
 }
+
 .modal1_firstPart {
   margin: 0 1.2rem 0 0;
 }
+
 .delete_modal {
   margin-left: auto;
 }
+
 .deleteContents_align {
   text-align: center;
   line-height: 30px;
 }
+
 .del_align {
   margin-left: auto;
 }
+
 .searchBar {
   margin: 0 0.5rem 0 auto;
 }
+
 .hide {
   visibility: hidden;
 }
+
+.show {
+  visibility: "visible";
+}
+
 .styling_close {
   border: 1px solid #76787a;
   border-radius: 4px;
@@ -329,7 +340,7 @@ input::placeholder {
   justify-content: center;
   align-items: center;
   width: 10rem;
-  background-color: #505A74;
+  background-color: #505a74;
   font-weight: 500;
   font-size: 1.2rem;
   position: absolute;
@@ -349,6 +360,18 @@ input::placeholder {
   background-color: red;
 }
 
+.error {
+  background-color: white;
+  text-align: center;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.deleteName {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
 @media (max-width: 500px) {
   .data {
     overflow-x: scroll;
@@ -360,14 +383,14 @@ input::placeholder {
   }
   .group input {
     width: 200px;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
   }
   .group button {
     width: 200px;
   }
   .modal1_width {
     width: 300px;
-    height: 390px;
+    height: 425px;
   }
   .modal1_form {
     display: flex;
@@ -386,6 +409,13 @@ input::placeholder {
     margin: 0;
   }
   .del_modalFlex {
-    height: 250px;
+    height: 265px;
+  }
+  .deleteName {
+    font-size: 1rem;
+  }
+  .tableEmpty {
+    position: absolute;
+    left: 25%;
   }
 }
