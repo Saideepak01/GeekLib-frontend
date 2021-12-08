@@ -25,8 +25,8 @@ table.innerHTML = `
     </table>
 `;
 
-// let API = "https://geeklib-101.herokuapp.com";
-let API = "http://localhost:2001";
+let API = "https://geeklib-101.herokuapp.com";
+// let API = "http://localhost:2001";
 
 //async operation which fetches the data
 async function loadData() {
