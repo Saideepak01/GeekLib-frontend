@@ -34,6 +34,10 @@ async function loadData() {
     const data = await fetch(`${API}`);
     const res = await data.json();
     window.noOfBooks = res.length;
+    if(res){
+      let spinner = document.querySelector(".loading");
+      spinner.style.display = "none";
+    }
     if (res.length === 0) {
       //checks the length of fetched data if 0 then displayes no books avaliable else send the data to the books function
       const tableEmpty = document.querySelector("tbody");
@@ -358,15 +362,6 @@ function close_Btn() {
   let modal = document.querySelector(".modal");
   modal.classList.remove("modal_active");
 }
-
-let spinner = document.querySelector(".loading");
-window.onload = function () {
-  let spinner = document.querySelector(".loading");
-  spinner.style.transition = "opacity 1s";
-  setTimeout(function () {
-    spinner.style.opacity = 0;
-  }, 0);
-};
 
 function search() {
   let input, filter, table, tr, td, i, value;
