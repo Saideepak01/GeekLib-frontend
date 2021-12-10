@@ -34,10 +34,13 @@ async function loadData() {
     const data = await fetch(`${API}`);
     const res = await data.json();
     window.noOfBooks = res.length;
-    if(res){
+
+    if (res) {
+      //shows loading animation till the data gets loaded
       let spinner = document.querySelector(".loading");
       spinner.style.display = "none";
     }
+
     if (res.length === 0) {
       //checks the length of fetched data if 0 then displayes no books avaliable else send the data to the books function
       const tableEmpty = document.querySelector("tbody");
@@ -47,21 +50,24 @@ async function loadData() {
       <button class="btn_styling" onClick=addNewBook()>Add Book</button>
     </div>
   `;
+
       const searchHide = document.querySelector(".group");
-      searchHide.classList.add("hide");
+      searchHide.classList.add("hide"); //if there is no books then there is no use in displaying the search button and the 2nd add button so we hide it
     } else {
       booksData(res);
     }
+
   } catch (err) {
-    const error = document.querySelector(".error");
+    const error = document.querySelector(".error");//if there is any technical problem due to api limit and all error will be thrown
     error.innerHTML = `
       <p>:(</p>
-      <p>Technical error</p>
+      <p>Technical error</p> 
     `;
   }
 }
 loadData();
 
+//search button and add button and library item title
 const tablettl = document.querySelector(".tablettl");
 tablettl.innerHTML = `
 <div class="add">
@@ -75,7 +81,6 @@ tablettl.innerHTML = `
 </div>
   `;
 
-// <input class="searchBar" type="text" id="txtInp" onkeyup="search()" placeholder="Search using book name">
 let flag; //flag to check route which opeartion is to be carried out at book() function if false add operation else update
 
 //onClick of add button the addnewbook fn is called and the modal is activated and "add a new book" word is send as parameter to the modal fn and conditionally renders the modal title so that we can know that we are editing or adding
@@ -133,8 +138,8 @@ function booksData(list) {
 //onClick of edit button the editContent() fn is called and the modal is activated and "Edit book details" word is send as parameter to the modal fn and conditionally render the modal title so that we can know that we are editing or adding
 //and also the name, author, genre, edition details of the specific row is sent as parameter to the modal to edit the data
 function editContent() {
-  const editId = event.target.parentNode.innerText;
-  const [, names, author, genre, edition, id] = editId.split("\t");
+  const editId = event.target.parentNode.innerText;//parentNode return us the parent of the specific row we clicked.
+  const [, names, author, genre, edition, id] = editId.split("\t");//we are spliting the received input from parentNode and destructuring it
 
   let modal = document.querySelector(".modal");
   modal.classList.add("modal_active");
@@ -183,21 +188,21 @@ function modals(wordChange, name, author, genre, edition, id) {
 `;
 }
 
-//onclicking the save button in the modal it calls the book() function here name is accepeted as parameter if edit operation occurs then this name parameter is used to query the DB in the backend
+//onclicking the save button in the modal it calls the book() function here name is accepted as parameter if edit operation occurs then this id parameter is used to query the DB in the backend
 async function book(id) {
   let newName = document.querySelector("#name").value;
   let newEdition = document.querySelector("#edition").value;
   let newGenre = document.querySelector("#genre").value;
   let newAuthor = document.querySelector("#author").value;
 
-  //validates the form if empty raises an alert else it send the updated data or new data to be added to the DB.
+  //validates the form if empty raises an alert else it sends the updated data or new data to be added to the DB.
   if (
     newName === "" ||
     newEdition === "" ||
     newGenre === "" ||
     newAuthor === ""
   ) {
-    alert("Form no filled fully");
+    alert("Form not filled fully");
   } else {
     const updatedBook = {
       Name: newName,
@@ -205,8 +210,7 @@ async function book(id) {
       Genre: newGenre,
       Edition: newEdition,
     };
-    // console.log(updatedBook)
-    //the flag variable we previously used if checked here if true update opreation takes place or else add operation takes place
+    //the flag variable we previously used is checked here if true update operation takes place or else add operation takes place
     if (flag) {
       try {
         const updatedData = await fetch(`${API}/${id}`, {
@@ -216,13 +220,15 @@ async function book(id) {
             "Content-type": "application/json",
           },
         });
+
         console.log(updatedData);
         const table = document.querySelector("tbody");
         table.innerText = "";
-        loadData();
-        refresh();
-        close_Btn();
-        display();
+        loadData();//to refresh the data in the table to display the changes, without reloading the page
+        refresh();//to clear the inputs in the form
+        close_Btn();//after updating closes the modal
+        display();//display notification
+
         const notification = document.querySelector(".notification");
         notification.innerHTML = `
             <p>Changes saved!</p>
@@ -231,10 +237,10 @@ async function book(id) {
         notification.classList.remove("hide");
         setTimeout(function () {
           notification.classList.add("hide");
-        }, 2500);
-        // console.log(id)
+        }, 2500);//to raise a notification that the book is updated, it displayes it for 2.5s
+
       } catch (err) {
-        const error = document.querySelector(".error");
+        const error = document.querySelector(".error");//if there is any technical problem due to api limit and all error will be thrown
         error.innerHTML = `
           <p>:(</p>
           <p>Technical error</p>
@@ -249,12 +255,14 @@ async function book(id) {
             "Content-type": "application/json",
           },
         });
+
         const table = document.querySelector("tbody");
         table.innerText = "";
-        loadData();
-        refresh();
-        close_Btn();
-        display();
+        loadData();//to refresh the data in the table to display the changes
+        refresh();//to clear the inputs in the form
+        close_Btn();//after adding closes the modal
+        display();//display notification
+
         const notification = document.querySelector(".notification");
         notification.innerHTML = `
           <p>Book added!</p>
@@ -263,15 +271,17 @@ async function book(id) {
         notification.classList.remove("clr");
         setTimeout(function () {
           notification.classList.add("hide");
-        }, 3000);
+        }, 2500);//to raise a notification that the book is added, it displayes it for 2.5s
         const searchHide = document.querySelector(".group");
         searchHide.classList.remove("hide");
         searchHide.classList.add("show");
+
         setTimeout(function () {
           window.location.reload(true);
         }, 2000);
+
       } catch (err) {
-        const error = document.querySelector(".error");
+        const error = document.querySelector(".error");//if there is any technical problem due to api limit and all error will be thrown
         error.innerHTML = `
           <p>:(</p>
           <p>Technical error</p>
@@ -297,12 +307,12 @@ function refresh() {
   document.querySelector("#author").value = "";
 }
 
-//onclick of delete button, deleteContent() fn is called and a warning modal is displayed wheather to delete the specific row from the DB or not
+//onclick of delete button, deleteContent() fn is called and a warning modal is displayed wheather to delete the specific row from the table or not
 async function deleteContent() {
-  const editId = event.target.parentNode.innerText;
-  let [, bkname, , , , id] = editId.split("\t");
+  const editId = event.target.parentNode.innerText;//parentNode return us the parent of the specific row we clicked.
+  let [, bkname, , , , id] = editId.split("\t");//we are spliting the received input from parentNode and destructuring it
 
-  window.delBkname = bkname;
+  window.delBkname = bkname;//making the bookname to be deleted global so that it can be accessed by the modal and displayed
 
   const deleteRes = document.querySelector(".del_modal");
   deleteRes.classList.add("del_modalActive");
@@ -327,11 +337,12 @@ async function deleteData(id) {
     const delData = await fetch(`${API}/${id}`, {
       method: "DELETE",
     });
-    del_closeBtn();
+    del_closeBtn();//close button
     const table = document.querySelector("tbody");
     table.innerText = "";
-    loadData();
-    display();
+    loadData();//to refresh the data in the table to display the changes, without reloading the page
+
+    display();//display notification
     const notification = document.querySelector(".notification");
     notification.classList.add("clr");
     notification.innerHTML = `
@@ -341,9 +352,10 @@ async function deleteData(id) {
     notification.classList.remove("clr");
     setTimeout(function () {
       notification.classList.add("hide");
-    }, 2000);
+    }, 2500);//to raise a notification that the book is added, it displayes it for 2.5s
+
   } catch (err) {
-    const error = document.querySelector(".error");
+    const error = document.querySelector(".error");//if there is any technical problem due to api limit and all error will be thrown
     error.innerHTML = `
       <p>:(</p>
       <p>Technical error</p>
@@ -351,18 +363,19 @@ async function deleteData(id) {
   }
 }
 
-//on click of no button delete modal is closed.
+//on click of no button, delete modal is closed.
 function del_closeBtn() {
   let delModal = document.querySelector(".del_modal");
   delModal.classList.remove("del_modalActive");
 }
 
-//close button for modal
+//close button for delete modal
 function close_Btn() {
   let modal = document.querySelector(".modal");
   modal.classList.remove("modal_active");
 }
 
+//search operaion to search titles using isbn number
 function search() {
   let input, filter, table, tr, td, i, value;
   input = document.querySelector("#txtInp");

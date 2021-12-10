@@ -62,9 +62,7 @@ thead {
 .tbl tbody tr:nth-of-type(even) {
   background: #dce9f8;
 }
-.tbl thead tr th {
-  vertical-align: top;
-}
+
 .tbl tbody tr td {
   padding: 0.7rem;
 }
@@ -73,20 +71,50 @@ thead {
   z-index: 1;
   position: relative;
   animation: rotation 2s infinite linear;
+  -moz-animation: rotation 2s infinite linear;
+  -webkit-animation: rotation 2s infinite linear;
 }
 
 @keyframes rotation {
   from {
+    transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
   }
   to {
+    transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
     -webkit-transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 .close_btn {
   border: none;
   background-color: transparent;
   animation: fadein 0.5s linear;
+  -moz-animation: fadein 0.5s linear;
+  -webkit-animation: fadein 0.5s linear;
 }
 
 .modal1 {
@@ -145,15 +173,39 @@ thead {
   visibility: visible;
   opacity: 1;
   animation: fadein 0.4s linear;
+  -moz-animation: fadein 0.4s linear;
+  -webkit-animation: fadein 0.4s linear;
 }
 
 .modal_active {
   visibility: visible;
   opacity: 1;
   animation: fadein 0.4s linear;
+  -moz-animation: fadein 0.4s linear;
+  -webkit-animation: fadein 0.4s linear;
 }
 
 @keyframes fadein {
+  0%,
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadein {
+  0%,
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadein {
   0%,
   50% {
     opacity: 0;
@@ -322,13 +374,13 @@ input::placeholder {
 }
 .styling_close:hover {
   transform: translateY(-0.5px);
-  background-color: #c2c2c2;
+  background-color: #dd5863;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
   cursor: pointer;
 }
 .styling_close:active {
   transform: scale(0.98);
-  background-color: #76787a;
+  background-color: #d11a2a;
 }
 .group {
   display: flex;
