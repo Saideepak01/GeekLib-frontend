@@ -56,9 +56,8 @@ async function loadData() {
     } else {
       booksData(res);
     }
-
   } catch (err) {
-    const error = document.querySelector(".error");//if there is any technical problem due to api limit and all error will be thrown
+    const error = document.querySelector(".error"); //if there is any technical problem due to api limit and all error will be thrown
     error.innerHTML = `
       <p>:(</p>
       <p>Technical error</p> 
@@ -138,8 +137,8 @@ function booksData(list) {
 //onClick of edit button the editContent() fn is called and the modal is activated and "Edit book details" word is send as parameter to the modal fn and conditionally render the modal title so that we can know that we are editing or adding
 //and also the name, author, genre, edition details of the specific row is sent as parameter to the modal to edit the data
 function editContent() {
-  const editId = event.target.parentNode.innerText;//parentNode return us the parent of the specific row we clicked.
-  const [, names, author, genre, edition, id] = editId.split("\t");//we are spliting the received input from parentNode and destructuring it
+  const editId = event.target.parentNode.innerText; //parentNode return us the parent of the specific row we clicked.
+  const [, names, author, genre, edition, id] = editId.split("\t"); //we are spliting the received input from parentNode and destructuring it
 
   let modal = document.querySelector(".modal");
   modal.classList.add("modal_active");
@@ -221,13 +220,12 @@ async function book(id) {
           },
         });
 
-        console.log(updatedData);
         const table = document.querySelector("tbody");
         table.innerText = "";
-        loadData();//to refresh the data in the table to display the changes, without reloading the page
-        refresh();//to clear the inputs in the form
-        close_Btn();//after updating closes the modal
-        display();//display notification
+        loadData(); //to refresh the data in the table to display the changes, without reloading the page
+        refresh(); //to clear the inputs in the form
+        close_Btn(); //after updating closes the modal
+        display(); //display notification
 
         const notification = document.querySelector(".notification");
         notification.innerHTML = `
@@ -237,10 +235,9 @@ async function book(id) {
         notification.classList.remove("hide");
         setTimeout(function () {
           notification.classList.add("hide");
-        }, 2500);//to raise a notification that the book is updated, it displayes it for 2.5s
-
+        }, 2500); //to raise a notification that the book is updated, it displayes it for 2.5s
       } catch (err) {
-        const error = document.querySelector(".error");//if there is any technical problem due to api limit and all error will be thrown
+        const error = document.querySelector(".error"); //if there is any technical problem due to api limit and all error will be thrown
         error.innerHTML = `
           <p>:(</p>
           <p>Technical error</p>
@@ -258,10 +255,10 @@ async function book(id) {
 
         const table = document.querySelector("tbody");
         table.innerText = "";
-        loadData();//to refresh the data in the table to display the changes
-        refresh();//to clear the inputs in the form
-        close_Btn();//after adding closes the modal
-        display();//display notification
+        loadData(); //to refresh the data in the table to display the changes
+        refresh(); //to clear the inputs in the form
+        close_Btn(); //after adding closes the modal
+        display(); //display notification
 
         const notification = document.querySelector(".notification");
         notification.innerHTML = `
@@ -271,7 +268,7 @@ async function book(id) {
         notification.classList.remove("clr");
         setTimeout(function () {
           notification.classList.add("hide");
-        }, 2500);//to raise a notification that the book is added, it displayes it for 2.5s
+        }, 2500); //to raise a notification that the book is added, it displayes it for 2.5s
         const searchHide = document.querySelector(".group");
         searchHide.classList.remove("hide");
         searchHide.classList.add("show");
@@ -279,9 +276,8 @@ async function book(id) {
         setTimeout(function () {
           window.location.reload(true);
         }, 2000);
-
       } catch (err) {
-        const error = document.querySelector(".error");//if there is any technical problem due to api limit and all error will be thrown
+        const error = document.querySelector(".error"); //if there is any technical problem due to api limit and all error will be thrown
         error.innerHTML = `
           <p>:(</p>
           <p>Technical error</p>
@@ -309,10 +305,10 @@ function refresh() {
 
 //onclick of delete button, deleteContent() fn is called and a warning modal is displayed wheather to delete the specific row from the table or not
 async function deleteContent() {
-  const editId = event.target.parentNode.innerText;//parentNode return us the parent of the specific row we clicked.
-  let [, bkname, , , , id] = editId.split("\t");//we are spliting the received input from parentNode and destructuring it
+  const editId = event.target.parentNode.innerText; //parentNode return us the parent of the specific row we clicked.
+  let [, bkname, , , , id] = editId.split("\t"); //we are spliting the received input from parentNode and destructuring it
 
-  window.delBkname = bkname;//making the bookname to be deleted global so that it can be accessed by the modal and displayed
+  window.delBkname = bkname; //making the bookname to be deleted global so that it can be accessed by the modal and displayed
 
   const deleteRes = document.querySelector(".del_modal");
   deleteRes.classList.add("del_modalActive");
@@ -337,12 +333,12 @@ async function deleteData(id) {
     const delData = await fetch(`${API}/${id}`, {
       method: "DELETE",
     });
-    del_closeBtn();//close button
+    del_closeBtn(); //close button
     const table = document.querySelector("tbody");
     table.innerText = "";
-    loadData();//to refresh the data in the table to display the changes, without reloading the page
+    loadData(); //to refresh the data in the table to display the changes, without reloading the page
 
-    display();//display notification
+    display(); //display notification
     const notification = document.querySelector(".notification");
     notification.classList.add("clr");
     notification.innerHTML = `
@@ -352,16 +348,21 @@ async function deleteData(id) {
     notification.classList.remove("clr");
     setTimeout(function () {
       notification.classList.add("hide");
-    }, 2500);//to raise a notification that the book is added, it displayes it for 2.5s
-
+    }, 2500); //to raise a notification that the book is added, it displayes it for 2.5s
   } catch (err) {
-    const error = document.querySelector(".error");//if there is any technical problem due to api limit and all error will be thrown
+    const error = document.querySelector(".error"); //if there is any technical problem due to api limit and all error will be thrown
     error.innerHTML = `
       <p>:(</p>
       <p>Technical error</p>
     `;
   }
 }
+
+//footer
+const footer = document.querySelector(".bottom");
+footer.innerHTML = `
+  <p><i class="fas fa-code footingbg"></i> with <i class="fas fa-heart footingbg"></i> by Sai Deepak</p>
+`;
 
 //on click of no button, delete modal is closed.
 function del_closeBtn() {
